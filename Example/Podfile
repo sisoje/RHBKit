@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'RHBKit_Example' do
+  pod 'RHBKit', :path => '../'
+
+  target 'RHBKit_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
