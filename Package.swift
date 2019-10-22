@@ -15,6 +15,14 @@ let package = Package(
         .library(
             name: "RHBFoundationTestUtilities",
             targets: ["RHBFoundationTestUtilities"]
+        ),
+        .library(
+            name: "RHBCoreData",
+            targets: ["RHBCoreData"]
+        ),
+        .library(
+            name: "RHBCoreDataTestUtilities",
+            targets: ["RHBCoreDataTestUtilities"]
         )
     ],
     dependencies: [
@@ -35,6 +43,18 @@ let package = Package(
         .testTarget(
             name: "RHBFoundationTests",
             dependencies: ["RHBFoundation", "RHBFoundationTestUtilities"]
+        ),
+        .target(
+            name: "RHBCoreData",
+            dependencies: ["RHBFoundation"]
+        ),
+        .target(
+            name: "RHBCoreDataTestUtilities",
+            dependencies: ["RHBFoundation", "RHBCoreData"]
+        ),
+        .testTarget(
+            name: "RHBCoreDataTests",
+            dependencies: ["RHBFoundation", "RHBCoreData", "RHBFoundationTestUtilities", "RHBCoreDataTestUtilities"]
         )
     ]
 )
