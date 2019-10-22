@@ -1,0 +1,6 @@
+framework module RHBKit {
+  umbrella header "RHBKit-b20f4574-umbrella.h"
+
+  export *
+  module * { export * }
+}

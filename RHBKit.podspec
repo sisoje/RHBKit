@@ -6,10 +6,12 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
 
+$platforms = { :ios => "10.0", :watchos => "3.0", :tvos => "10.0", :osx => "10.12" }
+
 Pod::Spec.new do |s|
   s.name             = 'RHBKit'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of RHBKit.'
+  s.version          = '1.0.959'
+  s.summary          = 'Orientation tracker. Data stack. Table background data source. Predicate operators. Objective-C defer, casting & singleton.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +20,60 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Mutable protocol. Predicate operators. Cancellable and core data operations. Casting, singletons and defer for Objective-C and more... Goal was to reduce overabstractions and keep it low level.
                        DESC
 
-  s.homepage         = 'https://github.com/redhotbits@gmail.com/RHBKit'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.homepage         = 'https://github.com/sisoje/RHBKit'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'redhotbits@gmail.com' => 'lazar.otasevic@1und1.de' }
-  s.source           = { :git => 'https://github.com/redhotbits@gmail.com/RHBKit.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = { 'Lazar Otasevic' => 'redhotbits@gmail.com' }
+  s.source           = { :git => 'https://github.com/sisoje/RHBKit.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/redhotbits'
+  s.documentation_url = 'https://raw.githubusercontent.com/sisoje/RHBKit/master/README.md'
 
-  s.ios.deployment_target = '8.0'
+  s.swift_version = '4.0'
 
-  s.source_files = 'RHBKit/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'RHBKit' => ['RHBKit/Assets/*.png']
-  # }
+  s.platforms = $platforms
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.subspec 'All' do |all|
+
+    all.subspec 'Core' do |ss|
+        ss.source_files = 'Sources/Core/**/*'
+    end
+
+    all.subspec 'OrientationTracker' do |ss|
+        ss.platforms = $platforms.except(:osx, :tvos)
+        ss.source_files = 'Sources/OrientationTracker/**/*'
+        ss.dependency 'RHBKit/All/Core'
+    end
+
+    all.subspec 'UIKit' do |uikit|
+        uikit.subspec 'Core' do |ss|
+            ss.platforms = $platforms.except(:osx)
+            ss.source_files = 'Sources/UIKit/Core/**/*'
+        end
+        uikit.subspec 'Extras' do |ss|
+            ss.platforms = $platforms.except(:osx, :watchos)
+            ss.source_files = 'Sources/UIKit/Extras/**/*'
+            ss.dependency 'RHBKit/All/Core'
+        end
+    end
+
+=begin
+      all.subspec 'Contacts' do |ss|
+            ss.platforms = $platforms.except(:tvos)
+            ss.source_files = 'Sources/Contacts/Classes/**/*'
+            ss.resources = 'Sources/Contacts/Assets/**/*'
+            ss.dependency 'RHBKit/All/Foundation'
+      end
+=end
+
+  end
+
+    s.subspec 'ObjC' do |ss|
+        ss.source_files = 'ObjC/**/*'
+        ss.dependency 'RHBKit/All/Core'
+    end
+
+s.default_subspec = 'All/Core'
+
 end

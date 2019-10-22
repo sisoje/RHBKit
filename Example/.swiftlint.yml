@@ -1,0 +1,14 @@
+disabled_rules: # rule identifiers to exclude from running
+  - line_length
+  - vertical_whitespace
+  - trailing_whitespace
+  - identifier_name
+  - operator_whitespace
+  - type_name
+colon:
+  apply_to_dictionaries: true
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Tests
+  - RHBKit
+included: # paths to ignore during linting. Takes precedence over `included`.
+  - ../Sources

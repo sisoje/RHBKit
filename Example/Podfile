@@ -1,11 +1,16 @@
 use_frameworks!
+platform :ios, '10.0'
 
 target 'RHBKit_Example' do
-  pod 'RHBKit', :path => '../'
+
+  pod 'RHBKit/All', :path => '../'
 
   target 'RHBKit_Tests' do
     inherit! :search_paths
-
-    
   end
+end
+
+target 'Example_Orientation' do
+
+    pod 'RHBKit/All/OrientationTracker', :path => '../'
 end

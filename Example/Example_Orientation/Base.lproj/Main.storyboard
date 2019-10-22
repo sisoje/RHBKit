@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example_Orientation" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ja" translatesAutoresizingMaskIntoConstraints="NO" id="DC0-lq-01W">
+                                <rect key="frame" x="20.5" y="20.5" width="559" height="559"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="DC0-lq-01W" secondAttribute="height" multiplier="1:1" id="9Hk-a9-y05"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="DC0-lq-01W" firstAttribute="width" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Hu4-ao-J9t"/>
+                            <constraint firstItem="DC0-lq-01W" firstAttribute="height" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="height" id="V0H-1P-uK2"/>
+                            <constraint firstItem="DC0-lq-01W" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" priority="750" constant="161" id="oHf-50-lxx"/>
+                            <constraint firstItem="DC0-lq-01W" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="s1L-HP-xlg"/>
+                            <constraint firstItem="DC0-lq-01W" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="tM1-PE-yTF"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="DC0-lq-01W" id="PHQ-mv-JW7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="116" y="118.29085457271366"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ja" width="559" height="559"/>
+    </resources>
+</document>
