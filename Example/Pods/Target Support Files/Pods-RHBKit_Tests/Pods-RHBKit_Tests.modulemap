@@ -1,6 +1,0 @@
-framework module Pods_RHBKit_Tests {
-  umbrella header "Pods-RHBKit_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}

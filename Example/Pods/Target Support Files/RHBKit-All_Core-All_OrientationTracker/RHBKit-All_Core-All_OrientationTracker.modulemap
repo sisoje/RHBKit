@@ -1,6 +1,0 @@
-framework module RHBKit {
-  umbrella header "RHBKit-All_Core-All_OrientationTracker-umbrella.h"
-
-  export *
-  module * { export * }
-}
