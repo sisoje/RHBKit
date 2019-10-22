@@ -1,0 +1,10 @@
+os:
+  - osx
+osx_image: xcode11.1
+language: swift
+script:
+  - swift test
+notifications:
+  email:
+    on_success: change
+    on_failure: change
