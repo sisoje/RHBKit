@@ -2,7 +2,6 @@ import CoreData
 import RHBCoreData
 import RHBCoreDataTestUtilities
 import RHBFoundation
-import RHBFoundationTestUtilities
 import XCTest
 
 extension CoreDataStack {
@@ -148,7 +147,8 @@ class CoreDataStackTestCase: XCTestCase {
     func testFulfiller() {
         let N = 10
         (0..<N * 2).forEach { index in
-            let ful = expectation(description: "\(#function) \(index)").fulfiller
+            let ex = expectation(description: "\(#function) \(index)")
+            let ful = DeinitBlock { ex.fulfill() }
             if index.isMultiple(of: 2) {
                 return
             }
