@@ -4,17 +4,13 @@ import PackageDescription
 let package = Package(
     name: "RHBKit",
     platforms: [
-        .iOS("10.3")
+        .macOS(.v10_12), .iOS("10.3")
     ],
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "RHBFoundation",
             targets: ["RHBFoundation"]
-        ),
-        .library(
-            name: "RHBFoundationTestUtilities",
-            targets: ["RHBFoundationTestUtilities"]
         ),
         .library(
             name: "RHBCoreData",
@@ -40,13 +36,9 @@ let package = Package(
             name: "RHBFoundation",
             dependencies: []
         ),
-        .target(
-            name: "RHBFoundationTestUtilities",
-            dependencies: ["RHBFoundation"]
-        ),
         .testTarget(
             name: "RHBFoundationTests",
-            dependencies: ["RHBFoundation", "RHBFoundationTestUtilities"]
+            dependencies: ["RHBFoundation"]
         ),
         .target(
             name: "RHBCoreData",
@@ -58,7 +50,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RHBCoreDataTests",
-            dependencies: ["RHBFoundation", "RHBCoreData", "RHBFoundationTestUtilities", "RHBCoreDataTestUtilities"]
+            dependencies: ["RHBFoundation", "RHBCoreData", "RHBCoreDataTestUtilities"]
         ),
         .target(
             name: "RHBContacts",
