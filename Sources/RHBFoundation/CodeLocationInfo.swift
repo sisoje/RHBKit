@@ -1,10 +1,10 @@
 import Foundation
 
-public struct ErrorWithInfo: LocalizedError {
-    public let info: Any?
-    public let file: String
-    public let line: Int
-    public let function: String
+public final class CodeLocationInfo {
+    let info: Any?
+    let file: String
+    let line: Int
+    let function: String
 
     public init(
         _ info: Any? = nil,
@@ -17,7 +17,9 @@ public struct ErrorWithInfo: LocalizedError {
         self.file = file
         self.function = function
     }
+}
 
+extension CodeLocationInfo: LocalizedError {
     public var errorDescription: String? {
         "File: \(file) Line: \(line) Function: \(function) Info: \(String(describing: info))"
     }
