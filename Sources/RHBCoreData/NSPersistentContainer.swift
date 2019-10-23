@@ -22,12 +22,6 @@ public extension NSPersistentContainer {
         try persistentStoreCoordinator.removeStores()
     }
 
-    func createPersistentStoreDirectories() throws {
-        try persistentStoreDescriptions
-            .compactMap { $0.url?.deletingLastPathComponent() }
-            .forEach { try FileManager().createDirectory(at: $0, withIntermediateDirectories: true) }
-    }
-
     func loadPersistentStoresSync() throws {
         persistentStoreDescriptions.forEach {
             $0.shouldAddStoreAsynchronously = false
@@ -67,11 +61,10 @@ public extension NSPersistentContainer {
 
 extension NSPersistentStoreCoordinator {
     func destroyPersistentStores(_ descriptions: [NSPersistentStoreDescription]) throws {
-        try descriptions.forEach {
-            guard let url = $0.url else {
-                return
+        try descriptions.forEach { desc in
+            try desc.url.map {
+                try destroyPersistentStore(at: $0, ofType: desc.type)
             }
-            try destroyPersistentStore(at: url, ofType: $0.type)
         }
     }
 
