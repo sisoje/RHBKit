@@ -23,6 +23,10 @@ let package = Package(
         .library(
             name: "RHBContacts",
             targets: ["RHBContacts"]
+        ),
+        .library(
+            name: "RHBUIKit",
+            targets: ["RHBUIKit"]
         )
     ],
     dependencies: [
@@ -34,6 +38,10 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "RHBFoundation",
+            dependencies: []
+        ),
+        .target(
+            name: "RHBUIKit",
             dependencies: []
         ),
         .target(

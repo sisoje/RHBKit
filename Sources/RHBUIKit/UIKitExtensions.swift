@@ -1,3 +1,4 @@
+#if !os(macOS)
 import UIKit
 
 // MARK: - UIApplication
@@ -19,7 +20,7 @@ extension UIApplication {
 // MARK: - UIAlertController
 
 extension UIAlertController {
-    static func makeAlertOk(title: String, message: String, ok: String = "OK") -> UIAlertController {
+    static func makeAlert(_ title: String? = nil, message: String? = nil, ok: String = "OK") -> UIAlertController {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(
             UIAlertAction(
@@ -35,6 +36,14 @@ extension UIAlertController {
 // MARK: - UIViewController
 
 extension UIViewController {
+    func presentMessage(_ message: String) {
+        present(
+            UIAlertController.makeAlert(message),
+            animated: true,
+            completion: nil
+        )
+    }
+
     func presentError(error: Error?) {
         guard let message = error.localizedDescription else {
             return
@@ -78,3 +87,4 @@ extension UIWindow {
         )
     }
 }
+#endif

@@ -48,39 +48,39 @@ extension EntityChecker {
 
     func checkIfTypeFromCoreDataMatchesTypeInClass(_ attributeDescription: NSAttributeDescription, _ typeInfoInClass: String) {
         switch attributeDescription.attributeType {
-        case .floatAttributeType:
-            fallthrough
-        case .integer16AttributeType:
-            fallthrough
-        case .integer32AttributeType:
-            XCTFail("Should use 64-bit types in entity: \(entityDescription.name!) property: \(attributeDescription.name) ")
-        case .integer64AttributeType:
-            XCTAssert(DummyTypes.matchType(name: "int", info: typeInfoInClass), "Should use Int in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .doubleAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "double", info: typeInfoInClass), "Should use Double in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .booleanAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "bool", info: typeInfoInClass), "Should use Bool in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .UUIDAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "uuid", info: typeInfoInClass), "Should use UUID in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .stringAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "string", info: typeInfoInClass), "Should use String in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .URIAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "url", info: typeInfoInClass), "Should use Url in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .dateAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "date", info: typeInfoInClass) || DummyTypes.matchType(name: "timeinterval", info: typeInfoInClass), "Should use Date or TimeInterval in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .binaryDataAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "data", info: typeInfoInClass), "Should use Data in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .transformableAttributeType:
-            XCTAssertNotNil(attributeDescription.attributeValueClassName, "No custom class set in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-            XCTAssert(DummyTypes.matchType(name: "set", info: typeInfoInClass) || DummyTypes.matchType(name: "array", info: typeInfoInClass) || DummyTypes.matchType(name: "dictionary", info: typeInfoInClass), "Should use collection custom class in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .decimalAttributeType:
-            XCTAssert(DummyTypes.matchType(name: "decimal", info: typeInfoInClass), "Should use Decimal in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
-        case .objectIDAttributeType:
-            XCTFail("Object ID can not be used in core data in entity: \(entityDescription.name!) property: \(attributeDescription.name)")
-        case .undefinedAttributeType:
-            XCTFail("Undefined type in entity: \(entityDescription.name!) property: \(attributeDescription.name)")
-        @unknown default:
-            XCTFail("New type needs testing in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in coredata: \(attributeDescription.attributeValueClassName!)")
+            case .floatAttributeType:
+                fallthrough
+            case .integer16AttributeType:
+                fallthrough
+            case .integer32AttributeType:
+                XCTFail("Should use 64-bit types in entity: \(entityDescription.name!) property: \(attributeDescription.name) ")
+            case .integer64AttributeType:
+                XCTAssert(DummyTypes.matchType(name: "int", info: typeInfoInClass), "Should use Int in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .doubleAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "double", info: typeInfoInClass), "Should use Double in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .booleanAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "bool", info: typeInfoInClass), "Should use Bool in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .UUIDAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "uuid", info: typeInfoInClass), "Should use UUID in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .stringAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "string", info: typeInfoInClass), "Should use String in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .URIAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "url", info: typeInfoInClass), "Should use Url in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .dateAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "date", info: typeInfoInClass) || DummyTypes.matchType(name: "timeinterval", info: typeInfoInClass), "Should use Date or TimeInterval in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .binaryDataAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "data", info: typeInfoInClass), "Should use Data in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .transformableAttributeType:
+                XCTAssertNotNil(attributeDescription.attributeValueClassName, "No custom class set in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+                XCTAssert(DummyTypes.matchType(name: "set", info: typeInfoInClass) || DummyTypes.matchType(name: "array", info: typeInfoInClass) || DummyTypes.matchType(name: "dictionary", info: typeInfoInClass), "Should use collection custom class in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .decimalAttributeType:
+                XCTAssert(DummyTypes.matchType(name: "decimal", info: typeInfoInClass), "Should use Decimal in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
+            case .objectIDAttributeType:
+                XCTFail("Object ID can not be used in core data in entity: \(entityDescription.name!) property: \(attributeDescription.name)")
+            case .undefinedAttributeType:
+                XCTFail("Undefined type in entity: \(entityDescription.name!) property: \(attributeDescription.name)")
+            @unknown default:
+                XCTFail("New type needs testing in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in coredata: \(attributeDescription.attributeValueClassName!)")
         }
     }
 
