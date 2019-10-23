@@ -22,7 +22,7 @@ final class CacheTests: XCTestCase {
         let cache = Cache<Int, NSString>()
         cache[5] = "a"
         XCTAssert(cache[5] == "a")
-        cache.removeAllObjects()
+        cache.nsCache.removeAllObjects()
         XCTAssertNil(cache[5])
     }
 }

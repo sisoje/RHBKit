@@ -28,18 +28,32 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "RHBFoundationTestUtilities"
-               BuildableName = "RHBFoundationTestUtilities"
-               BlueprintName = "RHBFoundationTestUtilities"
+               BlueprintIdentifier = "RHBContacts"
+               BuildableName = "RHBContacts"
+               BlueprintName = "RHBContacts"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "RHBCoreData"
+               BuildableName = "RHBCoreData"
+               BlueprintName = "RHBCoreData"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "RHBFoundationTests"
