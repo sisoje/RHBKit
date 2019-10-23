@@ -10,10 +10,7 @@ public final class ContactsApi {
 public extension ContactsApi {
     func requestContactsAccess(_ block: @escaping (Result<Bool, Error>) -> Void) {
         store.requestAccess(for: .contacts) { bool, error in
-            block(Result {
-                try error.map { throw $0 }
-                return bool
-            })
+            block(error.map { .failure($0) } ?? .success(bool))
         }
     }
 

@@ -45,7 +45,7 @@ final class FetchedResultsControllerDelegateWithBlocks<T: NSFetchRequestResult>:
     }
 
     func controller(_: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
-        return blocks.sectionIndexTitle?(sectionName)
+        blocks.sectionIndexTitle?(sectionName)
     }
 
     func controller(_: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {

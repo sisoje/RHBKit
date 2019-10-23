@@ -14,7 +14,7 @@ public extension NSManagedObjectContext {
     }
 
     func existing<T: NSManagedObject>(_ object: T) -> T? {
-        return try? existingObject(with: object.objectID) as? T
+        try? existingObject(with: object.objectID) as? T
     }
 
     func makeFetchedResultsController<T: NSFetchRequestResult>(request: NSFetchRequest<T>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> NSFetchedResultsController<T> {
