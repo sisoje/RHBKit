@@ -1,4 +1,7 @@
 import CoreData
+import RHBFoundation
+
+public typealias LoadStoreError = (NSPersistentStoreDescription, Error)
 
 public extension NSPersistentContainer {
     convenience init(inMemory model: NSManagedObjectModel) {
@@ -29,21 +32,33 @@ public extension NSPersistentContainer {
         persistentStoreDescriptions.forEach {
             $0.shouldAddStoreAsynchronously = false
         }
-        var error: Error?
-        loadPersistentStores {
-            error = error ?? $1
+        var errors: [LoadStoreError] = []
+        loadPersistentStores { desc, error in
+            error.map {
+                errors.append(LoadStoreError(desc, $0))
+            }
         }
-        try error.map {
-            throw $0
+        guard errors.isEmpty else {
+            throw CodeLocationInfo(errors)
         }
     }
 
     func loadPersistentStoresAsync(_ block: @escaping (Error?) -> Void) {
+        let dg = DispatchGroup()
         persistentStoreDescriptions.forEach {
+            dg.enter()
             $0.shouldAddStoreAsynchronously = true
         }
-        loadPersistentStores {
-            block($1)
+        var errors: [LoadStoreError] = []
+        loadPersistentStores { desc, error in
+            error.map {
+                errors.append(LoadStoreError(desc, $0))
+            }
+            dg.leave()
+        }
+        dg.notify(queue: .main) {
+            let error = errors.isEmpty ? nil : CodeLocationInfo(errors)
+            block(error)
         }
     }
 }
