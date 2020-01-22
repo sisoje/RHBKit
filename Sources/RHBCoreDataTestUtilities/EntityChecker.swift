@@ -48,11 +48,7 @@ extension EntityChecker {
 
     func checkIfTypeFromCoreDataMatchesTypeInClass(_ attributeDescription: NSAttributeDescription, _ typeInfoInClass: String) {
         switch attributeDescription.attributeType {
-            case .floatAttributeType:
-                fallthrough
-            case .integer16AttributeType:
-                fallthrough
-            case .integer32AttributeType:
+            case .floatAttributeType, .integer16AttributeType, .integer32AttributeType:
                 XCTFail("Should use 64-bit types in entity: \(entityDescription.name!) property: \(attributeDescription.name) ")
             case .integer64AttributeType:
                 XCTAssert(DummyTypes.matchType(name: "int", info: typeInfoInClass), "Should use Int in entity: \(entityDescription.name!) property: \(attributeDescription.name) type in class: \(typeInfoInClass)")
