@@ -8,9 +8,9 @@ public final class CodeLocationInfo {
 
     public init(
         _ info: Any? = nil,
-        file: String = #file,
-        line: Int = #line,
-        function: String = #function
+        _ file: String = #file,
+        _ line: Int = #line,
+        _ function: String = #function
     ) {
         self.info = info
         self.line = line
