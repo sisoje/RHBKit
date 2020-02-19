@@ -21,6 +21,6 @@ public final class CodeLocationInfo {
 
 extension CodeLocationInfo: LocalizedError {
     public var errorDescription: String? {
-        "File: \(file) Line: \(line) Function: \(function) Info: \(String(describing: info))"
+        "File: \(file) Line: \(line) Function: \(function)" + (info.map { " Info: \($0)" } ?? "")
     }
 }
