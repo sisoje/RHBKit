@@ -10,7 +10,7 @@ public extension Optional {
 
     func forceCast<T: Any>(as type: T.Type, _ file: String = #file, _ line: Int = #line, _ function: String = #function) throws -> T {
         guard let result = self as? T else {
-            throw CodeLocationInfo(self, file, line, function)
+            throw CodeLocationInfo((self, type), file, line, function)
         }
         return result
     }
