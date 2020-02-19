@@ -1,5 +1,4 @@
 import CoreData
-import RHBFoundation
 import XCTest
 
 // MARK: - Public
@@ -11,7 +10,7 @@ public class EntityChecker {
     }
 }
 
-public extension EntityChecker {
+extension EntityChecker {
     func checkEntity() {
         XCTAssert(Int.bitWidth == 64, "This checker is for 64-bit platforms only")
         checkForUnmatchedProperties()
@@ -90,9 +89,9 @@ extension EntityChecker {
     }
 }
 
-public extension NSManagedObjectModel {
-    func chechEntities() {
-        entities.forEach {
+public extension EntityChecker {
+    static func check(model: NSManagedObjectModel) {
+        model.entities.forEach {
             EntityChecker(entityDescription: $0).checkEntity()
         }
     }

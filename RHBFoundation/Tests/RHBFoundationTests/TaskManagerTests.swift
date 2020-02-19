@@ -6,7 +6,7 @@ final class TaskManagerTests: XCTestCase {
         let indexes = Array(0..<3)
         let datas: [Data] = indexes.map { _ in UUID().uuidString.data(using: .utf8)! }
         let urls: [URL] = datas.map {
-            let url = RHBFoundationConstants.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString)
+            let url = RHBFoundationUtilities.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString)
             try! $0.write(to: url)
             return url
         }

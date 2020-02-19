@@ -3,7 +3,7 @@ import RHBFoundation
 
 public final class FetchRequestBuilder<T: NSManagedObject> {
     public let request: NSFetchRequest<T>
-    public init(request: NSFetchRequest<T> = FetchRequest<T>.request) {
+    public init(_ request: NSFetchRequest<T> = FetchRequest<T>.request) {
         self.request = request
     }
 }
@@ -24,23 +24,19 @@ public extension FetchRequestBuilder {
         addSort(by: keyPath, ascending: ascending)
     }
 
-    @discardableResult
-    func addSort<V: Comparable>(by keyPath: KeyPath<T, V?>, ascending: Bool) -> Self {
-        request.addSort(NSSortDescriptor(keyPath: keyPath, ascending: ascending))
-        return self
+    func addSort<V: Comparable>(by keyPath: KeyPath<T, V?>, ascending: Bool) {
+        addSort(NSSortDescriptor(keyPath: keyPath, ascending: ascending))
     }
 
-    @discardableResult
-    func addSort<V: Comparable>(by keyPath: KeyPath<T, V>, ascending: Bool) -> Self {
-        request.addSort(NSSortDescriptor(keyPath: keyPath, ascending: ascending))
-        return self
+    func addSort<V: Comparable>(by keyPath: KeyPath<T, V>, ascending: Bool) {
+        addSort(NSSortDescriptor(keyPath: keyPath, ascending: ascending))
     }
 }
 
 // MARK: - internal
 
-@objc extension NSFetchRequest {
+extension FetchRequestBuilder {
     func addSort(_ descriptor: NSSortDescriptor) {
-        sortDescriptors = (sortDescriptors ?? []) + [descriptor]
+        request.sortDescriptors = (request.sortDescriptors ?? []) + [descriptor]
     }
 }

@@ -4,6 +4,6 @@ import XCTest
 
 class EntityCheckerTestCase: XCTestCase {
     func testModel() {
-        NSManagedObjectModel.testModel.chechEntities()
+        EntityChecker.check(model: .testModel)
     }
 }

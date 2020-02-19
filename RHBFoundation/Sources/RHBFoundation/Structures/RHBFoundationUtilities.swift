@@ -1,8 +1,8 @@
 import Foundation
 
-public enum RHBFoundationConstants {}
+public enum RHBFoundationUtilities {}
 
-public extension RHBFoundationConstants {
+public extension RHBFoundationUtilities {
     static var isDebug: Bool {
         var b = false
         assert({ b = true }() == ())

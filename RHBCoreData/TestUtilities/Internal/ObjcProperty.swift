@@ -1,6 +1,6 @@
 import Foundation
 
-public extension objc_property_t {
+extension objc_property_t {
     func typeInfo() -> String {
         NSString(utf8String: property_getAttributes(self)!)! as String
     }
