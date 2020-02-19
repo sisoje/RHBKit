@@ -25,18 +25,15 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "RHBCoreData",
-            dependencies: ["RHBFoundation"],
-            path: "Sources"
+            dependencies: ["RHBFoundation"]
         ),
         .target(
             name: "RHBCoreDataTestUtilities",
-            dependencies: [],
-            path: "TestUtilities"
+            dependencies: []
         ),
         .testTarget(
             name: "RHBCoreDataTests",
-            dependencies: ["RHBCoreData", "RHBCoreDataTestUtilities"],
-            path: "Tests"
+            dependencies: ["RHBCoreData", "RHBCoreDataTestUtilities"]
         )
     ]
 )
