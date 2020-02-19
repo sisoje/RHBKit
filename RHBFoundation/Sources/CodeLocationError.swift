@@ -1,6 +1,6 @@
 import Foundation
 
-public final class CodeLocationInfo {
+public struct CodeLocationError: Error {
     let info: Any?
     let file: String
     let line: Int
@@ -19,7 +19,7 @@ public final class CodeLocationInfo {
     }
 }
 
-extension CodeLocationInfo: LocalizedError {
+extension CodeLocationError: LocalizedError {
     public var errorDescription: String? {
         "File: \(file) Line: \(line) Function: \(function)" + (info.map { " Info: \($0)" } ?? "")
     }

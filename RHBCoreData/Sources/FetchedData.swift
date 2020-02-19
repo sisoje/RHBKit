@@ -2,11 +2,23 @@ import CoreData
 
 public final class FetchedData<T: NSFetchRequestResult> {
     public let controller: NSFetchedResultsController<T>
-    public let blocks: FetchedDataBlocks<T>
+
+    public var didChangeObject: [NSFetchedResultsChangeType: (T, IndexPath?, IndexPath?) -> Void] = [:]
+    public var didChangeSection: [NSFetchedResultsChangeType: (NSFetchedResultsSectionInfo, Int) -> Void] = [:]
+    public var willChange: (() -> Void)?
+    public var didChange: (() -> Void)?
+    public var sectionIndexTitle: ((String) -> String?)?
+
+    private let strongDelegate = FetcheDataDelegate<T>()
 
     public init(_ controller: NSFetchedResultsController<T>) {
         self.controller = controller
-        self.blocks = FetchedDataBlocks(controller)
+        self.strongDelegate.fetchedData = self
+        controller.delegate = self.strongDelegate
+    }
+
+    deinit {
+        controller.delegate = nil
     }
 }
 

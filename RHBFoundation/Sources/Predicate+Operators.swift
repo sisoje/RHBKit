@@ -6,6 +6,14 @@ public protocol TypedPredicateProtocol: NSPredicate { associatedtype Root }
 public final class CompoundPredicate<Root>: NSCompoundPredicate, TypedPredicateProtocol {}
 public final class ComparisonPredicate<Root>: NSComparisonPredicate, TypedPredicateProtocol {}
 
+public extension ComparisonPredicate {
+    convenience init<VAL>(_ kp: KeyPath<Root, VAL>, _ op: NSComparisonPredicate.Operator, _ value: Any?, modifier: Modifier = .direct, options: Options = []) {
+        let ex1 = \Root.self == kp ? NSExpression.expressionForEvaluatedObject() : NSExpression(forKeyPath: kp)
+        let ex2 = NSExpression(forConstantValue: value)
+        self.init(leftExpression: ex1, rightExpression: ex2, modifier: modifier, type: op, options: options)
+    }
+}
+
 // MARK: - compound operators
 
 public func && <TP1: TypedPredicateProtocol, TP2: TypedPredicateProtocol>(p1: TP1, p2: TP2) -> CompoundPredicate<TP1.Root> where TP1.Root == TP2.Root {
@@ -48,14 +56,4 @@ public func >= <C: Comparable, R, K: KeyPath<R, C>>(kp: K, value: C) -> Comparis
 
 public func === <S: Sequence, R, K: KeyPath<R, S.Element>>(kp: K, values: S) -> ComparisonPredicate<R> where S.Element: Equatable {
     ComparisonPredicate(kp, .in, values)
-}
-
-// MARK: - internal
-
-extension ComparisonPredicate {
-    convenience init<VAL>(_ kp: KeyPath<Root, VAL>, _ op: NSComparisonPredicate.Operator, _ value: Any?) {
-        let ex1 = \Root.self == kp ? NSExpression.expressionForEvaluatedObject() : NSExpression(forKeyPath: kp)
-        let ex2 = NSExpression(forConstantValue: value)
-        self.init(leftExpression: ex1, rightExpression: ex2, modifier: .direct, type: op)
-    }
 }

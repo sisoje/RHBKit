@@ -3,15 +3,21 @@ import Foundation
 public enum RHBFoundationConstants {}
 
 public extension RHBFoundationConstants {
-    static let isDebug: Bool = {
+    static var isDebug: Bool {
         var b = false
         assert({ b = true }() == ())
         return b
-    }()
+    }
 
-    static let isSimulator = TARGET_OS_SIMULATOR != 0
+    static var isSimulator: Bool {
+        TARGET_OS_SIMULATOR != 0
+    }
 
-    static let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    static var documentDirectoryUrl: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
 
-    static let temporaryDirectoryUrl = FileManager.default.temporaryDirectory
+    static var temporaryDirectoryUrl: URL {
+        FileManager.default.temporaryDirectory
+    }
 }

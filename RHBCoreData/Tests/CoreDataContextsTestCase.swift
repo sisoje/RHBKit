@@ -4,40 +4,48 @@ import RHBCoreDataTestUtilities
 import RHBFoundation
 import XCTest
 
-extension CoreDataStack {
+extension CoreDataContextsTestCase {
     func createTestEntity(id: String, _ block: @escaping (Result<TestEntity, Error>) -> Void) {
-        writingContext.write(errorBlock: { _ in }) { context in
-            let t = context.makeObject { (x: TestEntity) in
-                x.id = id
-            }
-            block(.success(t))
+        var t: TestEntity!
+        writer.write(errorBlock: { error in
+            block(Result {
+                try error.map {
+                    throw $0
+                }
+                return try self.container.viewContext.existing(objectFromDifferentContext: try t.forceUnwrap())
+            })
+        }) { context in
+            t = TestEntity(context: context)
+            t.id = id
         }
     }
 }
 
-class CoreDataStackTestCase: XCTestCase {
+class CoreDataContextsTestCase: XCTestCase {
     var container: NSPersistentContainer!
-    var stack: CoreDataStack!
+    var writer: BacgroundWriter!
+    var reader: BacgroundReader!
     let errorBlock: (Error?) -> Void = {
         XCTAssertNil($0)
     }
 
     override func setUp() {
         container = .testContainerByLoadingTestModelInMemory()
-        stack = CoreDataStack(container)
+        writer = BacgroundWriter(container: container)
+        reader = BacgroundReader(container: container)
     }
 
     func testExisting() {
         let ex = expectation(description: #function)
-        stack.createTestEntity(id: "1") { result in
+        createTestEntity(id: "1") { result in
             let ent = try! result.get()
-            self.stack.writingContext.write(errorBlock: self.errorBlock) { context in
-                let ent2 = context.existing(ent)
+            self.writer.write(errorBlock: self.errorBlock) { context in
+                let ent2 = try context.existing(objectFromDifferentContext: ent)
                 XCTAssertNotNil(ent2)
-                ent2?.deleteFromManagedObjectContext()
+                try ent2.deleteFromManagedObjectContext()
             }
-            self.stack.writingContext.write(errorBlock: self.errorBlock) { context in
-                XCTAssertNil(context.existing(ent))
+            self.writer.write(errorBlock: self.errorBlock) { context in
+                XCTAssertThrowsError(try context.existing(objectFromDifferentContext: ent))
                 ex.fulfill()
             }
         }
@@ -49,26 +57,26 @@ class CoreDataStackTestCase: XCTestCase {
             XCTAssertNil($0)
         }
 
-        stack.createTestEntity(id: #function) { result in
+        createTestEntity(id: #function) { result in
             _ = try! result.get()
         }
 
-        stack.writingContext.write(errorBlock: errorBlock) { context in
+        writer.write(errorBlock: errorBlock) { context in
             let fetchRequest = FetchRequestBuilder(predicate: \TestEntity.id == #function).request
             let testEntity = try! context.fetch(fetchRequest).first!
             XCTAssert(testEntity.id == #function)
             testEntity.id = nil
         }
 
-        stack.writingContext.write(errorBlock: errorBlock) { context in
+        writer.write(errorBlock: errorBlock) { context in
             let fetchRequest = FetchRequestBuilder(predicate: \TestEntity.id == nil).request
             let testEntity = try! context.fetch(fetchRequest).first!
             XCTAssert(testEntity.id == nil)
-            testEntity.deleteFromManagedObjectContext()
+            try testEntity.deleteFromManagedObjectContext()
         }
 
         let ex = expectation(description: #function)
-        stack.writingContext.write(errorBlock: errorBlock) { context in
+        writer.write(errorBlock: errorBlock) { context in
             let fetchRequest = FetchRequest<TestEntity>.request
             XCTAssert(try! context.fetch(fetchRequest).isEmpty)
             ex.fulfill()
@@ -81,12 +89,12 @@ class CoreDataStackTestCase: XCTestCase {
         var counter = 0
         let N = 200
         (0..<N).forEach { _ in
-            stack.writingContext.performTask { context in
+            writer.write(errorBlock: errorBlock) { context in
                 counter += 1
                 try! context.save()
             }
         }
-        stack = nil
+        writer = nil
         try! container.removeStores()
         XCTAssert(counter < N)
     }
@@ -123,22 +131,21 @@ class CoreDataStackTestCase: XCTestCase {
         let ex = expectation(description: #function)
         let fetchRequest = FetchRequestBuilder(sortBy: \TestEntity.id, ascending: true).request
         var data: FetchedData<TestEntity>!
-        stack.readingContext.performTask { context in
-            let cont = context.makeFetchedResultsController(request: fetchRequest)
-            try! cont.performFetch()
+        reader.read(errorBlock: errorBlock) { context in
+            let cont = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+            try cont.performFetch()
             data = FetchedData(cont)
-            data.blocks.didChange = {
+            data.didChange = {
                 ex.fulfill()
                 XCTAssert(cont.sections?.first?.numberOfObjects == 1)
             }
-            data.blocks.didChangeObject[.insert] = { ent, _, _ in
+            data.didChangeObject[.insert] = { ent, _, _ in
                 XCTAssert(ent.id == #function)
             }
-            self.stack.writingContext.performTask { context in
-                context.makeObject { (testEntity: TestEntity) in
-                    testEntity.id = #function
-                }
-                try! context.saveChanges()
+            self.writer.write(errorBlock: self.errorBlock) { context in
+                let testEntity = TestEntity(context: context)
+                testEntity.id = #function
+                try context.saveChanges()
             }
         }
         waitForExpectations(timeout: 1, handler: nil)
@@ -152,23 +159,22 @@ class CoreDataStackTestCase: XCTestCase {
             if index.isMultiple(of: 2) {
                 return
             }
-            stack.writingContext.performTask { context in
-                context.makeObject { (obj: TestEntity) in
-                    obj.id = #function
-                }
-                try! context.save()
+            writer.write(errorBlock: errorBlock) { context in
+                let obj = TestEntity(context: context)
+                obj.id = #function
+                try context.save()
                 ful.noop()
             }
         }
         waitForExpectations(timeout: 1) {
             XCTAssertNil($0)
-            XCTAssert(try! self.stack.mainContext.fetch(TestEntity.fetchRequest()).count == N)
+            XCTAssert(try! self.container.viewContext.fetch(TestEntity.fetchRequest()).count == N)
         }
     }
 
     func testFetchedData() {
         let fetchRequest = FetchRequestBuilder(sortBy: \TestEntity.id, ascending: true).request
-        let controller = stack.mainContext.makeFetchedResultsController(request: fetchRequest)
+        let controller = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         try! controller.performFetch()
         let fetchedData = FetchedData(controller)
 
@@ -178,34 +184,34 @@ class CoreDataStackTestCase: XCTestCase {
         var updated = false
         var inserted = false
         var deleted = false
-        fetchedData.blocks.willChange = {
+        fetchedData.willChange = {
             XCTAssert(willed == dided)
             willed += 1
         }
-        fetchedData.blocks.didChange = {
+        fetchedData.didChange = {
             dided += 1
             XCTAssert(willed == dided)
         }
-        fetchedData.blocks.didChangeObject[.insert] = { entity, path1, path2 in
+        fetchedData.didChangeObject[.insert] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
             XCTAssertNil(path1)
             XCTAssertEqual(entity, fetchedData[path2!])
             inserted = true
         }
-        fetchedData.blocks.didChangeObject[.delete] = { entity, path1, path2 in
+        fetchedData.didChangeObject[.delete] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
             XCTAssertNotNil(path1)
             XCTAssertNil(path2)
             XCTAssertFalse(fetchedData.controller.fetchedObjects!.contains(entity))
             deleted = true
         }
-        fetchedData.blocks.didChangeObject[.update] = { entity, path1, path2 in
+        fetchedData.didChangeObject[.update] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
             XCTAssert(path1 == path2)
             XCTAssertEqual(entity, fetchedData[path1!])
             updated = true
         }
-        fetchedData.blocks.didChangeObject[.move] = { entity, path1, path2 in
+        fetchedData.didChangeObject[.move] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
             XCTAssert(path1 != path2)
             XCTAssertEqual(entity, fetchedData[path2!])
@@ -234,16 +240,16 @@ class CoreDataStackTestCase: XCTestCase {
         try! container.viewContext.save()
         XCTAssert(moved)
 
-        t1.deleteFromManagedObjectContext()
+        try! t1.deleteFromManagedObjectContext()
         XCTAssert(!deleted)
         try! container.viewContext.save()
         XCTAssert(deleted)
         XCTAssert(fetchedData.controller.sections?.first?.numberOfObjects == 1)
 
         let ex = expectation(description: #function)
-        stack.writingContext.performTask { context in
-            let obj = try! context.refetch([t5]).first!
-            obj.deleteFromManagedObjectContext()
+        writer.write(errorBlock: errorBlock) { context in
+            let obj = try context.existing(objectFromDifferentContext: t5)
+            try obj.deleteFromManagedObjectContext()
             try! context.save()
             DispatchQueue.main.async {
                 ex.fulfill()
@@ -270,7 +276,7 @@ class CoreDataStackTestCase: XCTestCase {
         }
 
         container.performBackgroundTask { context in
-            XCTAssertNotNil(context.existing(ent))
+            _=try! context.existing(objectFromDifferentContext: ent)
             ex2.fulfill()
         }
 
@@ -291,11 +297,10 @@ class CoreDataStackTestCase: XCTestCase {
             }()
             fr1.returnsObjectsAsFaults = true
 
-            self.stack.readingContext.performTask {
+            self.reader.read(errorBlock: self.errorBlock) {
                 XCTAssert(try! $0.fetch(fr1).first?.objectID == ent.objectID)
                 XCTAssert(try! $0.fetch(fr2).first?.objectID == ent.objectID)
-                XCTAssert(try! $0.refetch([ent]).first?.objectID == ent.objectID)
-                XCTAssert($0.existing(ent)?.objectID == ent.objectID)
+                XCTAssert(try! $0.existing(objectFromDifferentContext: ent).objectID == ent.objectID)
                 ex.fulfill()
             }
         }
@@ -305,25 +310,24 @@ class CoreDataStackTestCase: XCTestCase {
 
     func testSelfInBackground() {
         let ex = expectation(description: "Refetch test")
-        stack.readingContext.performTask { context in
+        reader.read(errorBlock: errorBlock) { context in
             let fetchRequest = FetchRequestBuilder(sortBy: \TestEntity.id, ascending: true).request
-            let cont = context.makeFetchedResultsController(request: fetchRequest)
+            let cont = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
             try! cont.performFetch()
             let data = FetchedData(cont)
-            data.blocks.didChange = {
+            data.didChange = {
                 ex.fulfill()
                 XCTAssertNotNil(data.controller.fetchedObjects, "Just to retain data")
             }
-            data.blocks.didChangeObject[.insert] = { ent, _, _ in
-                self.stack.writingContext.performTask { writingContext in
-                    let ent1 = try! writingContext.refetch([ent]).first!
+            data.didChangeObject[.insert] = { ent, _, _ in
+                self.writer.write(errorBlock: self.errorBlock) { writingContext in
+                    let ent1 = try writingContext.existing(objectFromDifferentContext: ent)
                     XCTAssert(ent.objectID == ent1.objectID)
                 }
             }
-            self.stack.writingContext.performTask { context in
+            self.writer.write(errorBlock: self.errorBlock) { context in
                 let ent = TestEntity(context: context)
                 ent.id = UUID().uuidString
-                try! context.saveChanges()
             }
         }
         waitForExpectations(timeout: 1, handler: nil)

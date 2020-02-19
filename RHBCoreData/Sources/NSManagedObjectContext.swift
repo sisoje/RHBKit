@@ -8,23 +8,7 @@ public extension NSManagedObjectContext {
         }
     }
 
-    func refetch<S: Sequence>(_ sequence: S) throws -> [S.Element] where S.Element: NSManagedObject {
-        let request = FetchRequestBuilder(predicate: \S.Element.self === sequence).request
-        return try fetch(request)
-    }
-
-    func existing<T: NSManagedObject>(_ object: T) -> T? {
-        try? existingObject(with: object.objectID) as? T
-    }
-
-    func makeFetchedResultsController<T: NSFetchRequestResult>(request: NSFetchRequest<T>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> NSFetchedResultsController<T> {
-        NSFetchedResultsController(fetchRequest: request, managedObjectContext: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
-    }
-
-    @discardableResult
-    func makeObject<T: NSManagedObject>(_ initialize: (T) -> Void) -> T {
-        let object = T(context: self)
-        initialize(object)
-        return object
+    func existing<T: NSManagedObject>(objectFromDifferentContext object: T) throws -> T {
+        try Optional(try existingObject(with: object.objectID)).forceCast(as: T.self)
     }
 }

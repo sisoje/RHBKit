@@ -1,7 +1,8 @@
 import CoreData
+import RHBFoundation
 
 public extension NSManagedObject {
-    func deleteFromManagedObjectContext() {
-        managedObjectContext?.delete(self)
+    func deleteFromManagedObjectContext() throws {
+        try managedObjectContext.forceUnwrap().delete(self)
     }
 }
