@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Lazar Otasevic on 2/19/20.
-//
-
 import CoreData
 
 extension NSPersistentStoreCoordinator {

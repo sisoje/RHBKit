@@ -13,8 +13,8 @@ public final class FetchedData<T: NSFetchRequestResult> {
 
     public init(_ controller: NSFetchedResultsController<T>) {
         self.controller = controller
-        self.strongDelegate.fetchedData = self
-        controller.delegate = self.strongDelegate
+        strongDelegate.fetchedData = self
+        controller.delegate = strongDelegate
     }
 
     deinit {

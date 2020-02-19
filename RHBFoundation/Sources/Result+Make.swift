@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Lazar Otasevic on 2/19/20.
-//
-
 import Foundation
 
 public extension Result where Failure == Error {

@@ -276,7 +276,7 @@ class CoreDataContextsTestCase: XCTestCase {
         }
 
         container.performBackgroundTask { context in
-            _=try! context.existing(objectFromDifferentContext: ent)
+            _ = try! context.existing(objectFromDifferentContext: ent)
             ex2.fulfill()
         }
 

@@ -1,0 +1,31 @@
+--exclude **/SwiftGen/Generated*.swift,**/FirebaseFirestoreSwift/
+
+# trailingCommas
+--commas inline
+
+# hoistPatternLet
+--patternlet inline
+
+# redundantSelf
+--selfrequired init
+--self init-only
+
+# semicolons
+--semicolons never
+
+# unusedArguments
+--stripunusedargs closure-only
+
+# wrapArguments
+--wraparguments before-first
+--wrapcollections before-first
+
+# ranges
+--ranges no-space
+
+# fileHeader
+--header strip
+
+# indent
+--ifdef no-indent
+--indentcase true
