@@ -188,26 +188,27 @@ class CoreDataStackTestCase: XCTestCase {
         }
         fetchedData.blocks.didChangeObject[.insert] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
-            XCTAssert(path1 == path2)
-            XCTAssertEqual(entity, fetchedData[path1])
+            XCTAssertNil(path1)
+            XCTAssertEqual(entity, fetchedData[path2!])
             inserted = true
         }
         fetchedData.blocks.didChangeObject[.delete] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
-            XCTAssert(path1 == path2)
+            XCTAssertNotNil(path1)
+            XCTAssertNil(path2)
             XCTAssertFalse(fetchedData.controller.fetchedObjects!.contains(entity))
             deleted = true
         }
         fetchedData.blocks.didChangeObject[.update] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
             XCTAssert(path1 == path2)
-            XCTAssertEqual(entity, fetchedData[path1])
+            XCTAssertEqual(entity, fetchedData[path1!])
             updated = true
         }
         fetchedData.blocks.didChangeObject[.move] = { entity, path1, path2 in
             XCTAssertEqual(try! self.container.viewContext.existingObject(with: entity.objectID), entity)
             XCTAssert(path1 != path2)
-            XCTAssertEqual(entity, fetchedData[path2])
+            XCTAssertEqual(entity, fetchedData[path2!])
             moved = true
         }
 

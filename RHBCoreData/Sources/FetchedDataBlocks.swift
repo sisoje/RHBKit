@@ -1,7 +1,7 @@
 import CoreData
 
 public final class FetchedDataBlocks<T: NSFetchRequestResult> {
-    public var didChangeObject: [NSFetchedResultsChangeType: (T, IndexPath, IndexPath) -> Void] = [:]
+    public var didChangeObject: [NSFetchedResultsChangeType: (T, IndexPath?, IndexPath?) -> Void] = [:]
     public var didChangeSection: [NSFetchedResultsChangeType: (NSFetchedResultsSectionInfo, Int) -> Void] = [:]
     public var willChange: (() -> Void)?
     public var didChange: (() -> Void)?
@@ -39,7 +39,7 @@ final class FetchedResultsControllerDelegateWithBlocks<T: NSFetchRequestResult>:
     }
 
     func controller(_: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        blocks.didChangeObject[type]?(anObject as! T, indexPath ?? newIndexPath!, newIndexPath ?? indexPath!)
+        blocks.didChangeObject[type]?(anObject as! T, indexPath, newIndexPath)
     }
 
     func controller(_: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
