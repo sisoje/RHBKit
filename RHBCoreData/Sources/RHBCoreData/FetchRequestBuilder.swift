@@ -24,6 +24,16 @@ public extension FetchRequestBuilder {
         addSort(by: keyPath, ascending: ascending)
     }
 
+    convenience init(sortBy keyPath: KeyPath<T, String?>, ascending: Bool, comparatorType: StringComparatorType) {
+        self.init()
+        addSort(by: keyPath, ascending: ascending, comparatorType: comparatorType)
+    }
+
+    convenience init(sortBy keyPath: KeyPath<T, String>, ascending: Bool, comparatorType: StringComparatorType) {
+        self.init()
+        addSort(by: keyPath, ascending: ascending, comparatorType: comparatorType)
+    }
+
     func addSort<V: Comparable>(by keyPath: KeyPath<T, V?>, ascending: Bool) {
         addSort(NSSortDescriptor(keyPath: keyPath, ascending: ascending))
     }
@@ -31,12 +41,20 @@ public extension FetchRequestBuilder {
     func addSort<V: Comparable>(by keyPath: KeyPath<T, V>, ascending: Bool) {
         addSort(NSSortDescriptor(keyPath: keyPath, ascending: ascending))
     }
+
+    func addSort(by keyPath: KeyPath<T, String?>, ascending: Bool, comparatorType: StringComparatorType) {
+        addSort(StringSortDescriptor(keyPath: keyPath, ascending: ascending, comparatorType: comparatorType))
+    }
+
+    func addSort(by keyPath: KeyPath<T, String>, ascending: Bool, comparatorType: StringComparatorType) {
+        addSort(StringSortDescriptor(keyPath: keyPath, ascending: ascending, comparatorType: comparatorType))
+    }
 }
 
 // MARK: - internal
 
 extension FetchRequestBuilder {
     func addSort(_ descriptor: NSSortDescriptor) {
-        request.sortDescriptors = (request.sortDescriptors ?? []) + [descriptor]
+        request.sortDescriptors = request.sortDescriptors.map { $0 + [descriptor] } ?? [descriptor]
     }
 }
