@@ -20,4 +20,10 @@ public extension RHBFoundationUtilities {
     static var temporaryDirectoryUrl: URL {
         FileManager.default.temporaryDirectory
     }
+    
+    static func syncOnMain<T>(_ block: () throws -> T) rethrows -> T {
+        Thread.isMainThread ?
+            try block() :
+            try DispatchQueue.main.sync(execute: block)
+    }
 }
