@@ -44,8 +44,21 @@ public extension URLRequestBuilder {
         request.httpBody = try! encoder.encode(encodable)
     }
 
+    func urlEncodedBody(_ items: [URLQueryItem], _ encoding: String.Encoding = .utf8) {
+        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpBody = RHBFoundationUtilities.urlEncodeQueryItems(items).data(using: encoding)
+    }
+
     func acceptJson() {
         request.addValue("application/json", forHTTPHeaderField: "Accept")
+    }
+
+    func userAgent(_ agent: String) {
+        request.setValue(agent, forHTTPHeaderField: "User-Agent")
+    }
+
+    func acceptEncodingGzipDeflate() {
+        request.addValue("gzip, deflate", forHTTPHeaderField: "Accept-Encoding")
     }
 
     func basicAuthorization(_ username: String, _ password: String) {
@@ -53,7 +66,11 @@ public extension URLRequestBuilder {
         request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
     }
 
-    func bearer(_ token: String) {
-        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    func bearerAuthorization(_ token: String) {
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    }
+
+    func cachePolicy(_ policy: URLRequest.CachePolicy) {
+        request.cachePolicy = policy
     }
 }
