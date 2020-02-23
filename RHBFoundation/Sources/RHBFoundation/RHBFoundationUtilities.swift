@@ -8,6 +8,10 @@ public extension RHBFoundationUtilities {
         assert({ b = true }() == ())
         return b
     }
+    
+    static var isUnitTesting: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    }
 
     static var isSimulator: Bool {
         TARGET_OS_SIMULATOR != 0
