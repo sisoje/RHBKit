@@ -1,18 +1,16 @@
 import CoreData
 
-public struct BacgroundWriter {
-    private let backgroundContextInteractor: BackgroundContextInteractor
-}
+public class BacgroundWriter: BackgroundContextInteractor {}
 
 public extension BacgroundWriter {
-    init(container: NSPersistentContainer) {
+    convenience init(container: NSPersistentContainer) {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = false
-        self.init(backgroundContextInteractor: BackgroundContextInteractor(context))
+        self.init(context)
     }
 
     func write(errorBlock: @escaping (Error?) -> Void, _ taskBlock: @escaping (NSManagedObjectContext) throws -> Void) {
-        backgroundContextInteractor.performTask { context in
+        performTask { context in
             context.reset()
             defer { context.reset() }
             var resultError: Error?

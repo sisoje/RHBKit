@@ -1,18 +1,16 @@
 import CoreData
 
-public struct BacgroundReader {
-    private let backgroundContextInteractor: BackgroundContextInteractor
-}
-
+public class BacgroundReader: BackgroundContextInteractor {}
+    
 public extension BacgroundReader {
-    init(container: NSPersistentContainer) {
+    convenience init(container: NSPersistentContainer) {
         let context = container.newBackgroundContext()
         context.automaticallyMergesChangesFromParent = true
-        self.init(backgroundContextInteractor: BackgroundContextInteractor(context))
+        self.init(context)
     }
 
     func read(errorBlock: @escaping (Error?) -> Void, _ taskBlock: @escaping (NSManagedObjectContext) throws -> Void) {
-        backgroundContextInteractor.performTask { context in
+        performTask { context in
             var resultError: Error?
             do {
                 try taskBlock(context)
