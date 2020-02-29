@@ -53,8 +53,4 @@ public extension NSPersistentContainer {
             block(error)
         }
     }
-
-    func setupViewContext() {
-        viewContext.automaticallyMergesChangesFromParent = true
-    }
 }
