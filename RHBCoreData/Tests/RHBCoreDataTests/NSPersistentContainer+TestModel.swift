@@ -7,7 +7,7 @@ extension NSPersistentContainer {
     static func testContainerByLoadingTestModelInMemory() -> NSPersistentContainer {
         let p = NSPersistentContainer(inMemory: .testModel)
         try! p.loadPersistentStoresSync()
-        p.setupViewContext()
+        p.viewContext.automaticallyMergesChangesFromParent = true
         return p
     }
 }
