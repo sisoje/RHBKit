@@ -8,7 +8,7 @@ public extension Optional {
         return result
     }
 
-    func forceCast<T: Any>(as type: T.Type, _ file: String = #file, _ line: Int = #line, _ function: String = #function) throws -> T {
+    func forceCast<T: Any>(as type: T.Type = T.self, _ file: String = #file, _ line: Int = #line, _ function: String = #function) throws -> T {
         guard let result = self as? T else {
             throw CodeLocationError((self, type), file, line, function)
         }

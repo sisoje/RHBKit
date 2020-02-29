@@ -18,7 +18,7 @@ final class OptionalTests: XCTestCase {
 
     func testForceCast() {
         XCTAssertNoThrow(
-            XCTAssertEqual(try Optional(NSDictionary(dictionary: swiftDic)).forceCast(as: [String: Int].self), swiftDic)
+            XCTAssertEqual(try Optional(NSDictionary(dictionary: swiftDic)).forceCast(), swiftDic)
         )
     }
 

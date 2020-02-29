@@ -9,6 +9,6 @@ public extension NSManagedObjectContext {
     }
 
     func existing<T: NSManagedObject>(objectFromDifferentContext object: T) throws -> T {
-        try Optional(try existingObject(with: object.objectID)).forceCast(as: T.self)
+        try Optional(try existingObject(with: object.objectID)).forceCast()
     }
 }
