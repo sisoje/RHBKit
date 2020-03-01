@@ -34,6 +34,12 @@ class CoreDataContextsTestCase: XCTestCase {
         writer = BacgroundWriter(container: container)
         reader = BacgroundReader(container: container)
     }
+    
+    override func tearDown() {
+        reader = nil
+        writer = nil
+        container = nil
+    }
 
     func testExisting() {
         let ex = expectation(description: #function)
