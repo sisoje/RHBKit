@@ -1,4 +1,5 @@
 import CoreData
+import RHBFoundation
 
 public final class FetchedData<T: NSFetchRequestResult> {
     public let controller: NSFetchedResultsController<T>
@@ -33,5 +34,20 @@ public extension FetchedData {
 
     var numberOfObjects: Int {
         sections.map { $0.numberOfObjects }.reduce(0, +)
+    }
+    
+    func predicate<TP: TypedPredicateProtocol>(_ predicate: TP) where TP.Root == T {
+        controller.fetchRequest.predicate = predicate
+    }
+    
+    func performFetchInBackground(_ errorBlock: @escaping (Error?) -> Void) {
+        controller.managedObjectContext.perform { [weak self] in
+            do {
+                try self?.controller.performFetch()
+                errorBlock(nil)
+            } catch {
+                errorBlock(error)
+            }
+        }
     }
 }

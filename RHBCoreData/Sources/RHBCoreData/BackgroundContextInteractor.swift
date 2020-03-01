@@ -1,9 +1,9 @@
 import CoreData
 
 open class BackgroundContextInteractor {
-    private var context: NSManagedObjectContext?
+    private(set) public var context: NSManagedObjectContext!
 
-    init(_ context: NSManagedObjectContext) {
+    public init(_ context: NSManagedObjectContext) {
         self.context = context
     }
 
