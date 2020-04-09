@@ -1,7 +1,7 @@
 import Foundation
 
 public final class URLRequestBuilder {
-    private(set) public var request: URLRequest
+    public private(set) var request: URLRequest
 
     public init(_ url: URL) {
         self.request = URLRequest(url: url)
