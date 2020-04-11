@@ -20,6 +20,10 @@ public extension RHBFoundationUtilities {
     static var documentDirectoryUrl: URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
+    
+    static var cachesDirectoryUrl: URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+    }
 
     static var temporaryDirectoryUrl: URL {
         FileManager.default.temporaryDirectory
